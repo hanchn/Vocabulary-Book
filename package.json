@@ -4,11 +4,11 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"initTree": "node init.js",
-		"start": "node index.js",
-		"dev": "nodemon index.js"
-	},
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "initTree": "node init.js",
+  "start": "node serve/index.js",
+  "dev": "nodemon serve/index.js"
+  },
 	"author": "",
 	"license": "ISC",
 	"description": "",
