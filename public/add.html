@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>添加词汇 - 词汇书</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-brand">词汇书</a>
+      <ul class="navbar-menu">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="vocabulary.html">我的词汇</a></li>
+        <li><a href="add.html">添加词汇</a></li>
+        <li><a href="review.html">复习</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="container">
+    <h1>添加新词汇</h1>
+    <div class="card">
+      <form id="add-vocabulary-form">
+        <div class="form-group">
+          <label for="word" class="form-label">词汇</label>
+          <input type="text" id="word" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phonetic" class="form-label">音标 (可选)</label>
+          <input type="text" id="phonetic" class="form-control">
+        </div>
+        
+        <div class="form-group">
+          <label for="definition" class="form-label">定义</label>
+          <textarea id="definition" class="form-control" rows="3" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="example" class="form-label">例句 (可选)</label>
+          <textarea id="example" class="form-control" rows="2"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">标签 (可选)</label>
+          <div class="vocabulary-tags">
+            <label><input type="checkbox" name="tag" value="名词"> 名词</label>
+            <label><input type="checkbox" name="tag" value="动词"> 动词</label>
+            <label><input type="checkbox" name="tag" value="形容词"> 形容词</label>
+            <label><input type="checkbox" name="tag" value="副词"> 副词</label>
+            <label><input type="checkbox" name="tag" value="初级"> 初级</label>
+            <label><input type="checkbox" name="tag" value="中级"> 中级</label>
+            <label><input type="checkbox" name="tag" value="高级"> 高级</label>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">保存词汇</button>
+        <button type="reset" class="btn btn-outline">重置</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div>
+        <h3>词汇书</h3>
+        <p>您的个人词汇学习助手</p>
+      </div>
+      <div>
+        <h4>链接</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="vocabulary.html">我的词汇</a></li>
+          <li><a href="add.html">添加词汇</a></li>
+          <li><a href="review.html">复习</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 词汇书 - 保留所有权利</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

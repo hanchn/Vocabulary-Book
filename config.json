@@ -1,0 +1,13 @@
+{
+  "dailyGoal": 20,
+  "defaultLibrary": "cet4",
+  "availableLibraries": ["kindergarten", "elementary", "cet4", "cet6", "cet8"],
+  "reviewSettings": {
+    "easyInterval": 7,
+    "mediumInterval": 3,
+    "hardInterval": 1
+  },
+  "serverPort": 3000,
+  "audioEnabled": true,
+  "achievementEnabled": true
+}

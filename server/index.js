@@ -1,84 +1,150 @@
-// server/index.js
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
-import { listLibraries, loadLibrary } from './fileLoader.js';
-import { getTodayTask } from './taskScheduler.js';
-import { loadWrongWords, addWrongWord, removeWrongWord } from './wrongWordsManager.js';
-import { getAchievements, recordDailyCheckIn, incrementWordsLearned } from './achievementTracker.js';
+import { loadYamlFile } from './utils/yamlParser.js';
+import { getWrongWords, addWrongWord, removeWrongWord } from './wrongWordsManager.js';
+import { trackAchievement, getAchievements } from './achievementTracker.js';
+import { getDailyTask, updateTaskProgress } from './taskScheduler.js';
+import { getConfig } from './config.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 3000;
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
+const PORT = getConfig().serverPort || 3000;
+
+// 中间件
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
 
-// ------------------- API -------------------
-
-// 获取词库列表
+// 获取可用词库列表
 app.get('/api/libraries', (req, res) => {
-  res.json(listLibraries());
+  try {
+    const dataDir = path.join(__dirname, '../data');
+    const libraries = fs.readdirSync(dataDir)
+      .filter(item => fs.statSync(path.join(dataDir, item)).isDirectory() && !item.startsWith('.'));
+    
+    res.json({ libraries });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// 获取词库单词
-app.get('/api/library/:name', (req, res) => {
-  const words = loadLibrary(req.params.name);
-  res.json(words);
+// 获取特定词库的单词
+app.get('/api/words/:library', async (req, res) => {
+  try {
+    const { library } = req.params;
+    const dataDir = path.join(__dirname, '../data', library);
+    
+    if (!fs.existsSync(dataDir)) {
+      return res.status(404).json({ error: '词库不存在' });
+    }
+    
+    const files = fs.readdirSync(dataDir)
+      .filter(file => file.endsWith('.yaml') || file.endsWith('.yml'));
+    
+    let allWords = [];
+    for (const file of files) {
+      const words = await loadYamlFile(path.join(dataDir, file));
+      allWords = [...allWords, ...words];
+    }
+    
+    res.json({ words: allWords });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // 获取错词本
 app.get('/api/wrong-words', (req, res) => {
-  res.json(loadWrongWords());
+  try {
+    const wrongWords = getWrongWords();
+    res.json({ wrongWords });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// 添加/更新错词
+// 添加错词
 app.post('/api/wrong-words', (req, res) => {
-  const { word, fromLibrary, note } = req.body;
-  if (!word || !fromLibrary) return res.status(400).json({ error: 'word and fromLibrary required' });
-  addWrongWord({ word, fromLibrary, note });
-  res.json({ success: true });
+  try {
+    const { word } = req.body;
+    if (!word) {
+      return res.status(400).json({ error: '缺少单词信息' });
+    }
+    
+    addWrongWord(word);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// 删除错词
+// 从错词本移除单词
 app.delete('/api/wrong-words/:word', (req, res) => {
-  removeWrongWord(req.params.word);
-  res.json({ success: true });
+  try {
+    const { word } = req.params;
+    removeWrongWord(word);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// 获取成就信息
+// 获取成就
 app.get('/api/achievements', (req, res) => {
-  res.json(getAchievements());
+  try {
+    const achievements = getAchievements();
+    res.json({ achievements });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// 打卡
-app.post('/api/achievements/check-in', (req, res) => {
-  res.json(recordDailyCheckIn());
+// 记录成就
+app.post('/api/achievements', (req, res) => {
+  try {
+    const { type, value } = req.body;
+    if (!type) {
+      return res.status(400).json({ error: '缺少成就类型' });
+    }
+    
+    trackAchievement(type, value);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// 累计词数
-app.post('/api/achievements/increment', (req, res) => {
-  const { count = 1 } = req.body;
-  res.json(incrementWordsLearned(count));
-});
-
-// 获取今日任务
+// 获取每日任务
 app.get('/api/daily-task', (req, res) => {
-  res.json(getTodayTask());
+  try {
+    const task = getDailyTask();
+    res.json({ task });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// ------------------- 静态资源 -------------------
-const publicPath = path.resolve(__dirname, '../public');
-app.use(express.static(publicPath));
-
-// 默认主页
-app.get('/', (req, res) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
+// 更新任务进度
+app.post('/api/daily-task/progress', (req, res) => {
+  try {
+    const { wordId, status } = req.body;
+    if (!wordId || !status) {
+      return res.status(400).json({ error: '缺少必要参数' });
+    }
+    
+    updateTaskProgress(wordId, status);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// 启动服务
+// 启动服务器
 app.listen(PORT, () => {
-  console.log(`✅ 服务器已启动：http://localhost:${PORT}`);
+  console.log(`服务器运行在 http://localhost:${PORT}`);
 });
