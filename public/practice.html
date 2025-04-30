@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>背单词 - 词汇书</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-brand">词汇书</a>
+      <ul class="navbar-menu">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="vocabulary.html">我的词汇</a></li>
+        <li><a href="add.html">添加词汇</a></li>
+        <li><a href="review.html">复习</a></li>
+        <li><a href="practice.html">背单词</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="container">
+    <h1>单词拼写练习</h1>
+    <div class="card practice-card">
+      <div id="word-container">
+        <h2 id="masked-word">加载中...</h2>
+        <p><strong>释义：</strong> <span id="definition">加载中...</span></p>
+        <p><strong>例句：</strong> <span id="example">加载中...</span></p>
+        <p><strong>音标：</strong> <span id="phonetic">加载中...</span></p>
+      </div>
+      
+      <div class="form-group">
+        <input type="text" id="word-input" class="form-control" placeholder="请输入完整单词">
+        <button id="check-btn" class="btn btn-primary">检查</button>
+      </div>
+      
+      <div id="result-container" style="display: none;">
+        <div id="result-message"></div>
+        <button id="next-btn" class="btn btn-accent">下一个</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div>
+        <h3>词汇书</h3>
+        <p>您的个人词汇学习助手</p>
+      </div>
+      <div>
+        <h4>链接</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="vocabulary.html">我的词汇</a></li>
+          <li><a href="add.html">添加词汇</a></li>
+          <li><a href="review.html">复习</a></li>
+          <li><a href="practice.html">背单词</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 词汇书 - 保留所有权利</p>
+    </div>
+  </footer>
+
+  <script src="js/practice.js"></script>
+</body>
+</html>
