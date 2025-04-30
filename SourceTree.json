@@ -1,5 +1,6 @@
 {
   ".git": {
+    "COMMIT_EDITMSG": null,
     "HEAD": null,
     "branches": {},
     "config": null,
@@ -16,15 +17,63 @@
       "prepare-commit-msg.sample": null,
       "update.sample": null
     },
+    "index": null,
     "info": {
       "exclude": null
     },
+    "logs": {
+      "HEAD": null,
+      "refs": {
+        "heads": {
+          "master": null
+        },
+        "remotes": {
+          "origin": {
+            "master": null
+          }
+        }
+      }
+    },
     "objects": {
+      "60": {
+        "0bcfe8ee63e05610c3acd6e63c583d58f940f2": null
+      },
+      "91": {
+        "e97a1f04992f44ee6af39b60ddf133c403b1fc": null
+      },
+      "4e": {
+        "77292a33c6537ef69825ab3a1a655e539c339f": null
+      },
+      "6c": {
+        "f691cddb179736ee6afeb5674fbc2809fddae4": null
+      },
+      "ab": {
+        "533bc1ea81e80770aae52db67810bd5f942c68": null
+      },
+      "b2": {
+        "39d73b497410c29750f061d69f1e388e6ff307": null
+      },
+      "c3": {
+        "c191c5c64aef29dcf0fdbda6c7b6827de90158": null
+      },
+      "c4": {
+        "55cfb9c2273fe7aa9d96235289a4ca2f2d1eb6": null
+      },
+      "c7": {
+        "79d0e8ff7abb73be804eb748415f20fef2a2c6": null
+      },
       "info": {},
       "pack": {}
     },
     "refs": {
-      "heads": {},
+      "heads": {
+        "master": null
+      },
+      "remotes": {
+        "origin": {
+          "master": null
+        }
+      },
       "tags": {}
     }
   },
@@ -32,65 +81,50 @@
   "Prompt.md": null,
   "README.md": null,
   "SourceTree.json": null,
-  "Vocabulary-Book": {
-    ".gitignore": null,
-    "README.md": null,
-    "config.json": null,
-    "data": {
-      "README.md": null,
-      "cet4": {
-        "cet4-list-1.yaml": null
-      },
-      "elementary": {
-        "basic-words.yaml": null
-      },
-      "kindergarten": {
-        "unit-1.yaml": null
-      }
-    },
-    "package.json": null,
-    "prompt.md": null,
-    "public": {
-      "achievement.html": null,
-      "app.js": null,
-      "assets": {
-        "audio": {},
-        "badges": {},
-        "icons": {}
-      },
-      "index.html": null,
-      "review.html": null,
-      "style.css": null,
-      "wrong.html": null
-    },
-    "server": {
-      "achievementTracker.js": null,
-      "config.js": null,
-      "fileLoader.js": null,
-      "index.js": null,
-      "taskScheduler.js": null,
-      "utils": {
-        "yamlParser.js": null
-      },
-      "wrongWordsManager.js": null
-    },
-    "store": {
-      "README.md": null,
-      "achievements.json": null,
-      "activity-log.json": null,
-      "wrong-words.json": null
-    }
-  },
+  "config.json": null,
   "data": {
-    "cet4": {},
+    "README.md": null,
+    "cet4": {
+      "cet4-list-1.yaml": null
+    },
     "cet6": {},
     "cet8": {},
-    "kindergarten": {}
+    "elementary": {
+      "basic-words.yaml": null
+    },
+    "kindergarten": {
+      "unit-1.yaml": null
+    }
   },
   "init.js": null,
+  "node_modules": {},
   "package-lock.json": null,
   "package.json": null,
-  "public": {},
-  "server": {},
-  "store": {}
+  "public": {
+    "achievement.html": null,
+    "app.js": null,
+    "assets": {
+      "audio": {},
+      "badges": {},
+      "icons": {}
+    },
+    "index.html": null,
+    "review.html": null,
+    "style.css": null,
+    "wrong.html": null
+  },
+  "server": {
+    "achievementTracker.js": null,
+    "config.js": null,
+    "fileLoader.js": null,
+    "index.js": null,
+    "taskScheduler.js": null,
+    "utils": {
+      "yamlParser.js": null
+    },
+    "wrongWordsManager.js": null
+  },
+  "store": {
+    "README.md": null
+  }
 }

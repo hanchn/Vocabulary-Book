@@ -4,116 +4,121 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// 当前执行目录
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(__dirname);
-const structureFile = path.join(projectRoot, 'SourceTree.json');
-const gitignorePath = path.join(projectRoot, '.gitignore');
+const cwd = process.cwd(); // 👈 当前目录作为根目录
+const structureFile = path.join(cwd, 'SourceTree.json');
+const gitignoreFile = path.join(cwd, '.gitignore');
 
-// 解析 .gitignore
-let gitignorePatterns = [];
-if (fs.existsSync(gitignorePath)) {
-  const lines = fs.readFileSync(gitignorePath, 'utf-8').split(/\r?\n/);
-  gitignorePatterns = lines
+const log = (msg, icon = '📄') => console.log(`${icon} ${msg}`);
+
+// ---------------------
+// 🔍 解析 .gitignore
+// ---------------------
+let ignoreList = [];
+
+if (fs.existsSync(gitignoreFile)) {
+  const raw = fs.readFileSync(gitignoreFile, 'utf-8');
+  ignoreList = raw
+    .split(/\r?\n/)
     .map(line => line.trim())
-    .filter(line => line && !line.startsWith('#'))
-    .map(p => p.replace(/\/+$/, '')); // 去除尾部斜杠
+    .filter(line => line && !line.startsWith('#'));
 }
 
-/**
- * 判断某个相对路径是否被 gitignore 忽略
- */
-const isIgnored = (relativePath) => {
-  return gitignorePatterns.some(pattern => {
-    if (pattern.endsWith('/')) {
-      return relativePath.startsWith(pattern.slice(0, -1));
-    }
-    return relativePath === pattern || relativePath.startsWith(pattern + '/');
-  });
-};
+const isIgnored = (relPath) =>
+  ignoreList.some(rule =>
+    relPath === rule ||
+    relPath.startsWith(rule + '/') ||
+    (rule.endsWith('/') && relPath.startsWith(rule))
+  );
 
-/**
- * 递归创建结构
- */
-const createFromStructure = (base, tree) => {
+// ---------------------
+// 📂 创建结构
+// ---------------------
+function createStructure(basePath, tree) {
   for (const name in tree) {
     const value = tree[name];
-    const fullPath = path.join(base, name);
-    const relPath = path.relative(projectRoot, fullPath);
+    const absPath = path.join(basePath, name);
+    const relPath = path.relative(cwd, absPath);
 
     if (isIgnored(relPath)) {
-      console.log(`🚫 忽略: ${relPath}`);
+      log(`忽略 .gitignore 文件: ${relPath}`, '🚫');
       continue;
     }
 
     if (value === null) {
-      if (!fs.existsSync(fullPath)) {
-        fs.writeFileSync(fullPath, '');
-        console.log(`📄 创建文件: ${relPath}`);
+      if (!fs.existsSync(absPath)) {
+        fs.writeFileSync(absPath, '');
+        log(`创建文件: ${relPath}`, '📄');
       } else {
-        console.log(`⏭️ 跳过已存在文件: ${relPath}`);
+        log(`已存在文件: ${relPath}`, '⏭️');
       }
     } else if (Array.isArray(value)) {
-      if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath, { recursive: true });
-      value.forEach(file => {
-        const filePath = path.join(fullPath, file);
-        const fileRel = path.relative(projectRoot, filePath);
-        if (isIgnored(fileRel)) return console.log(`🚫 忽略: ${fileRel}`);
+      if (!fs.existsSync(absPath)) fs.mkdirSync(absPath, { recursive: true });
+      for (const file of value) {
+        const filePath = path.join(absPath, file);
+        const fileRel = path.relative(cwd, filePath);
+        if (isIgnored(fileRel)) {
+          log(`忽略 .gitignore 文件: ${fileRel}`, '🚫');
+          continue;
+        }
         if (!fs.existsSync(filePath)) {
           fs.writeFileSync(filePath, '');
-          console.log(`📄 创建文件: ${fileRel}`);
+          log(`创建文件: ${fileRel}`, '📄');
         } else {
-          console.log(`⏭️ 跳过已存在文件: ${fileRel}`);
+          log(`已存在文件: ${fileRel}`, '⏭️');
         }
-      });
-    } else {
-      if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath, { recursive: true });
-      console.log(`📁 确保目录: ${relPath}`);
-      createFromStructure(fullPath, value);
+      }
+    } else if (typeof value === 'object') {
+      if (!fs.existsSync(absPath)) {
+        fs.mkdirSync(absPath, { recursive: true });
+        log(`创建目录: ${relPath}`, '📁');
+      }
+      createStructure(absPath, value); // 递归处理子结构
     }
   }
-};
+}
 
-/**
- * 扫描当前目录结构（排除 gitignore）
- */
-const scanDirectory = (dir) => {
-  const entries = fs.readdirSync(dir);
-  const result = {};
+// ---------------------
+// 🔍 反向扫描结构
+// ---------------------
+function scanDirectory(dirPath) {
+  const entries = fs.readdirSync(dirPath);
+  const structure = {};
 
   for (const entry of entries) {
-    const fullPath = path.join(dir, entry);
-    const relPath = path.relative(projectRoot, fullPath);
+    const fullPath = path.join(dirPath, entry);
+    const relPath = path.relative(cwd, fullPath);
     if (isIgnored(relPath)) continue;
 
     const stat = fs.statSync(fullPath);
     if (stat.isDirectory()) {
       const children = scanDirectory(fullPath);
-      result[entry] = children;
+      structure[entry] = children;
     } else {
-      result[entry] = null;
+      structure[entry] = null;
     }
   }
 
-  return result;
-};
+  return structure;
+}
 
-// 主流程
-const run = () => {
+// ---------------------
+// 🚀 执行主逻辑
+// ---------------------
+function run() {
   // 1. 构建结构
   if (fs.existsSync(structureFile)) {
-    console.log('🚀 基于 SourceTree.json 开始构建...');
     const structure = JSON.parse(fs.readFileSync(structureFile, 'utf-8'));
-    createFromStructure(projectRoot, structure);
+    console.log('📦 构建目录结构...');
+    createStructure(cwd, structure);
   } else {
-    console.log('⚠️ 未找到 SourceTree.json，跳过构建目录。');
+    console.log('⚠️ 未找到 SourceTree.json，跳过构建结构');
   }
 
-  // 2. 生成当前结构 → 更新 SourceTree.json
-  console.log('\n🔍 扫描并更新项目结构到 SourceTree.json...');
-  const currentStructure = scanDirectory(projectRoot);
-  fs.writeFileSync(structureFile, JSON.stringify(currentStructure, null, 2), 'utf-8');
-  console.log('✅ 已写入最新结构到 SourceTree.json');
-};
+  // 2. 扫描结构
+  console.log('\n🧠 扫描当前文件夹生成最新结构...');
+  const structure = scanDirectory(cwd);
+  fs.writeFileSync(structureFile, JSON.stringify(structure, null, 2), 'utf-8');
+  console.log('✅ 已更新 SourceTree.json');
+}
 
 run();
