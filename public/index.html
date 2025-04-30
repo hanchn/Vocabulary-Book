@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vocabulary Book - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>📘 Vocabulary Book</h1>
+
+      <section>
+        <label for="librarySelect">词库选择：</label>
+        <select id="librarySelect"></select>
+
+        <label for="goalInput">每日单词目标：</label>
+        <input id="goalInput" type="number" min="1" value="20" />
+        <button id="saveGoalBtn">保存设置</button>
+      </section>
+
+      <section>
+        <button id="loadTaskBtn">获取今日任务</button>
+        <button id="checkInBtn">完成并打卡</button>
+      </section>
+
+      <section>
+        <h2>📋 今日单词任务</h2>
+        <ul id="wordList"></ul>
+      </section>
+
+      <section>
+        <h2>🏆 当前成就</h2>
+        <pre id="achievementBlock">Loading...</pre>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
