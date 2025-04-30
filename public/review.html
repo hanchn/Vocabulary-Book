@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vocabulary Review</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🧠 单词练习</h1>
+
+      <section id="card">
+        <p><strong>释义：</strong> <span id="definition">Loading...</span></p>
+        <p><strong>例句：</strong> <span id="example">Loading...</span></p>
+        <p><strong>音标：</strong> <span id="phonetic">...</span></p>
+      </section>
+
+      <section id="inputArea">
+        <input type="text" id="answerInput" placeholder="请输入单词拼写" />
+        <button id="submitBtn">提交</button>
+      </section>
+
+      <section id="feedback"></section>
+
+      <button id="nextBtn" style="display: none">下一题</button>
+    </div>
+
+    <script src="./review.js"></script>
+  </body>
+</html>
