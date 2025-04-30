@@ -1,0 +1,96 @@
+{
+  ".git": {
+    "HEAD": null,
+    "branches": {},
+    "config": null,
+    "description": null,
+    "hooks": {
+      "applypatch-msg.sample": null,
+      "commit-msg.sample": null,
+      "post-update.sample": null,
+      "pre-applypatch.sample": null,
+      "pre-commit.sample": null,
+      "pre-push.sample": null,
+      "pre-rebase.sample": null,
+      "pre-receive.sample": null,
+      "prepare-commit-msg.sample": null,
+      "update.sample": null
+    },
+    "info": {
+      "exclude": null
+    },
+    "objects": {
+      "info": {},
+      "pack": {}
+    },
+    "refs": {
+      "heads": {},
+      "tags": {}
+    }
+  },
+  ".gitignore": null,
+  "Prompt.md": null,
+  "README.md": null,
+  "SourceTree.json": null,
+  "Vocabulary-Book": {
+    ".gitignore": null,
+    "README.md": null,
+    "config.json": null,
+    "data": {
+      "README.md": null,
+      "cet4": {
+        "cet4-list-1.yaml": null
+      },
+      "elementary": {
+        "basic-words.yaml": null
+      },
+      "kindergarten": {
+        "unit-1.yaml": null
+      }
+    },
+    "package.json": null,
+    "prompt.md": null,
+    "public": {
+      "achievement.html": null,
+      "app.js": null,
+      "assets": {
+        "audio": {},
+        "badges": {},
+        "icons": {}
+      },
+      "index.html": null,
+      "review.html": null,
+      "style.css": null,
+      "wrong.html": null
+    },
+    "server": {
+      "achievementTracker.js": null,
+      "config.js": null,
+      "fileLoader.js": null,
+      "index.js": null,
+      "taskScheduler.js": null,
+      "utils": {
+        "yamlParser.js": null
+      },
+      "wrongWordsManager.js": null
+    },
+    "store": {
+      "README.md": null,
+      "achievements.json": null,
+      "activity-log.json": null,
+      "wrong-words.json": null
+    }
+  },
+  "data": {
+    "cet4": {},
+    "cet6": {},
+    "cet8": {},
+    "kindergarten": {}
+  },
+  "init.js": null,
+  "package-lock.json": null,
+  "package.json": null,
+  "public": {},
+  "server": {},
+  "store": {}
+}

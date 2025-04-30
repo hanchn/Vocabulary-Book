@@ -1,0 +1,25 @@
+# Node.js 依赖
+node_modules/
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+
+# 本地词库缓存（用户数据）
+store/wrong-words.json
+store/achievements.json
+store/activity-log.json
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器配置
+.vscode/
+.idea/
+
+# 日志文件
+*.log
+
+# 可选：词库备份或临时处理文件
+data/**/*.bak
+data/**/*.tmp

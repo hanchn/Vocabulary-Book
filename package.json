@@ -1,0 +1,17 @@
+{
+	"name": "vocabulary-book",
+	"version": "1.0.0",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"initTree": "node init.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"express": "^4.18.2"
+	},
+	"projectId": "380"
+}
