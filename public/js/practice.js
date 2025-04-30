@@ -1,9 +1,12 @@
-// 从本地存储获取词汇列表
-let vocabularyList = JSON.parse(localStorage.getItem('vocabularyList')) || [];
+// 全局变量
+let currentLibrary = '';
+let wordsList = [];
 let currentWord = null;
 let speechSynthesis = window.speechSynthesis;
 
 // DOM 元素
+const librarySelect = document.getElementById('library-select');
+const loadLibraryBtn = document.getElementById('load-library-btn');
 const maskedWordElement = document.getElementById('masked-word');
 const definitionElement = document.getElementById('definition');
 const exampleElement = document.getElementById('example');
@@ -16,16 +19,11 @@ const nextButton = document.getElementById('next-btn');
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
-  if (vocabularyList.length === 0) {
-    maskedWordElement.textContent = '没有可用的单词';
-    definitionElement.textContent = '请先添加一些单词';
-    document.getElementById('word-input').disabled = true;
-    document.getElementById('check-btn').disabled = true;
-  } else {
-    loadNewWord();
-  }
+  // 加载可用词库
+  fetchLibraries();
   
   // 绑定事件
+  loadLibraryBtn.addEventListener('click', loadSelectedLibrary);
   checkButton.addEventListener('click', checkAnswer);
   nextButton.addEventListener('click', loadNewWord);
   
@@ -37,14 +35,99 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// 获取可用词库列表
+async function fetchLibraries() {
+  try {
+    const response = await fetch('/api/libraries');
+    const data = await response.json();
+    
+    if (data.libraries && data.libraries.length > 0) {
+      // 清空选择框
+      librarySelect.innerHTML = '';
+      
+      // 添加默认选项
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = '-- 请选择词库 --';
+      librarySelect.appendChild(defaultOption);
+      
+      // 添加词库选项
+      data.libraries.forEach(library => {
+        const option = document.createElement('option');
+        option.value = library;
+        option.textContent = library;
+        librarySelect.appendChild(option);
+      });
+    } else {
+      librarySelect.innerHTML = '<option value="">没有可用的词库</option>';
+      loadLibraryBtn.disabled = true;
+    }
+  } catch (error) {
+    console.error('获取词库列表失败:', error);
+    librarySelect.innerHTML = '<option value="">加载失败</option>';
+  }
+}
+
+// 加载选中的词库
+async function loadSelectedLibrary() {
+  const selectedLibrary = librarySelect.value;
+  
+  if (!selectedLibrary) {
+    alert('请先选择一个词库');
+    return;
+  }
+  
+  try {
+    // 显示加载状态
+    maskedWordElement.textContent = '加载中...';
+    definitionElement.textContent = '加载中...';
+    exampleElement.textContent = '加载中...';
+    phoneticElement.textContent = '加载中...';
+    
+    // 获取词库单词
+    const response = await fetch(`/api/words/${selectedLibrary}`);
+    const data = await response.json();
+    
+    if (data.words && data.words.length > 0) {
+      wordsList = data.words;
+      currentLibrary = selectedLibrary;
+      
+      // 启用输入和按钮
+      wordInputElement.disabled = false;
+      checkButton.disabled = false;
+      
+      // 加载第一个单词
+      loadNewWord();
+    } else {
+      maskedWordElement.textContent = '该词库没有单词';
+      definitionElement.textContent = '-';
+      exampleElement.textContent = '-';
+      phoneticElement.textContent = '-';
+      
+      wordInputElement.disabled = true;
+      checkButton.disabled = true;
+    }
+  } catch (error) {
+    console.error('加载词库失败:', error);
+    maskedWordElement.textContent = '加载词库失败';
+    definitionElement.textContent = '请稍后重试';
+    exampleElement.textContent = '-';
+    phoneticElement.textContent = '-';
+  }
+}
+
 // 加载新单词
 function loadNewWord() {
+  if (wordsList.length === 0) {
+    return;
+  }
+  
   // 随机选择一个单词
-  const randomIndex = Math.floor(Math.random() * vocabularyList.length);
-  currentWord = vocabularyList[randomIndex];
+  const randomIndex = Math.floor(Math.random() * wordsList.length);
+  currentWord = wordsList[randomIndex];
   
   // 显示单词信息
-  definitionElement.textContent = currentWord.definition;
+  definitionElement.textContent = currentWord.definition || '无释义';
   exampleElement.textContent = currentWord.example || '无例句';
   phoneticElement.textContent = currentWord.phonetic || '';
   
@@ -135,42 +218,37 @@ function checkAnswer() {
     wordInputElement.disabled = true;
     checkButton.disabled = true;
     
-    // 更新单词状态
-    updateWordStatus(true);
+    // 记录成就（如果有API）
+    try {
+      fetch('/api/achievements', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          type: 'wordLearned',
+          value: 1
+        })
+      });
+    } catch (error) {
+      console.error('记录成就失败:', error);
+    }
   } else {
     resultMessage.innerHTML = `<div class="alert alert-danger">错误！正确答案是: ${currentWord.word}</div>`;
     
-    // 更新单词状态
-    updateWordStatus(false);
-  }
-}
-
-// 更新单词状态
-function updateWordStatus(isCorrect) {
-  // 找到当前单词在列表中的索引
-  const index = vocabularyList.findIndex(item => item.id === currentWord.id);
-  
-  if (index !== -1) {
-    // 更新复习次数
-    vocabularyList[index].reviewCount = (vocabularyList[index].reviewCount || 0) + 1;
-    vocabularyList[index].lastReviewed = new Date().toISOString();
-    
-    // 如果答错，添加到错词本
-    if (!isCorrect && !vocabularyList[index].isWrong) {
-      vocabularyList[index].isWrong = true;
+    // 添加到错词本（如果有API）
+    try {
+      fetch('/api/wrong-words', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          word: currentWord
+        })
+      });
+    } catch (error) {
+      console.error('添加错词失败:', error);
     }
-    
-    // 如果答对，可以考虑更新掌握状态
-    if (isCorrect && vocabularyList[index].reviewCount > 3) {
-      vocabularyList[index].mastered = true;
-    }
-    
-    // 保存到本地存储
-    saveVocabularyList();
   }
-}
-
-// 保存词汇列表到本地存储
-function saveVocabularyList() {
-  localStorage.setItem('vocabularyList', JSON.stringify(vocabularyList));
 }
