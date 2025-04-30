@@ -1,31 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Vocabulary Review</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h1>🧠 单词练习</h1>
-
-      <section id="card">
-        <p><strong>释义：</strong> <span id="definition">Loading...</span></p>
-        <p><strong>例句：</strong> <span id="example">Loading...</span></p>
-        <p><strong>音标：</strong> <span id="phonetic">...</span></p>
-      </section>
-
-      <section id="inputArea">
-        <input type="text" id="answerInput" placeholder="请输入单词拼写" />
-        <button id="submitBtn">提交</button>
-      </section>
-
-      <section id="feedback"></section>
-
-      <button id="nextBtn" style="display: none">下一题</button>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>词汇复习 - 词汇书</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-brand">词汇书</a>
+      <ul class="navbar-menu">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="vocabulary.html">我的词汇</a></li>
+        <li><a href="add.html">添加词汇</a></li>
+        <li><a href="review.html">复习</a></li>
+        <li><a href="practice.html">背单词</a></li>
+      </ul>
     </div>
+  </nav>
 
-    <script src="./review.js"></script>
-  </body>
+  <!-- 主要内容 -->
+  <div class="container">
+    <h1>🧠 单词练习</h1>
+
+    <section id="card" class="card">
+      <p><strong>释义：</strong> <span id="definition">加载中...</span></p>
+      <p><strong>例句：</strong> <span id="example">加载中...</span></p>
+      <p><strong>音标：</strong> <span id="phonetic">...</span></p>
+    </section>
+
+    <section id="inputArea" class="form-group">
+      <input type="text" id="answerInput" class="form-control" placeholder="请输入单词拼写" />
+      <button id="submitBtn" class="btn btn-primary">提交</button>
+    </section>
+
+    <section id="feedback"></section>
+
+    <button id="nextBtn" class="btn btn-accent" style="display: none">下一题</button>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div>
+        <h3>词汇书</h3>
+        <p>您的个人词汇学习助手</p>
+      </div>
+      <div>
+        <h4>链接</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="vocabulary.html">我的词汇</a></li>
+          <li><a href="add.html">添加词汇</a></li>
+          <li><a href="review.html">复习</a></li>
+          <li><a href="practice.html">背单词</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 词汇书 - 保留所有权利</p>
+    </div>
+  </footer>
+
+  <script src="review.js"></script>
+</body>
 </html>
