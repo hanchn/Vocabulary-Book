@@ -39,21 +39,37 @@ app.get('/api/words/:library', async (req, res) => {
     const { library } = req.params;
     const dataDir = path.join(__dirname, '../data', library);
     
+    console.log('请求词库:', library);
+    console.log('词库路径:', dataDir);
+    
     if (!fs.existsSync(dataDir)) {
+      console.log('词库目录不存在');
       return res.status(404).json({ error: '词库不存在' });
     }
     
     const files = fs.readdirSync(dataDir)
       .filter(file => file.endsWith('.yaml') || file.endsWith('.yml'));
     
+    console.log('找到的YAML文件:', files);
+    
     let allWords = [];
     for (const file of files) {
-      const words = await loadYamlFile(path.join(dataDir, file));
-      allWords = [...allWords, ...words];
+      try {
+        const words = await loadYamlFile(path.join(dataDir, file));
+        console.log(`文件 ${file} 中的单词数量:`, words ? words.length : 0);
+        if (words && Array.isArray(words)) {
+          allWords = [...allWords, ...words];
+        }
+      } catch (fileError) {
+        console.error(`解析文件 ${file} 出错:`, fileError);
+      }
     }
+    
+    console.log('总单词数量:', allWords.length);
     
     res.json({ words: allWords });
   } catch (error) {
+    console.error('获取词库单词出错:', error);
     res.status(500).json({ error: error.message });
   }
 });

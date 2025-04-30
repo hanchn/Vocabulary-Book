@@ -84,11 +84,20 @@ async function loadSelectedLibrary() {
     exampleElement.textContent = '加载中...';
     phoneticElement.textContent = '加载中...';
     
+    console.log('正在请求词库:', selectedLibrary);
+    
     // 获取词库单词
     const response = await fetch(`/api/words/${selectedLibrary}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP 错误! 状态: ${response.status}`);
+    }
+    
     const data = await response.json();
+    console.log('获取到的词库数据:', data);
     
     if (data.words && data.words.length > 0) {
+      console.log(`成功加载 ${data.words.length} 个单词`);
       wordsList = data.words;
       currentLibrary = selectedLibrary;
       
@@ -99,6 +108,7 @@ async function loadSelectedLibrary() {
       // 加载第一个单词
       loadNewWord();
     } else {
+      console.log('词库中没有单词');
       maskedWordElement.textContent = '该词库没有单词';
       definitionElement.textContent = '-';
       exampleElement.textContent = '-';
@@ -110,7 +120,7 @@ async function loadSelectedLibrary() {
   } catch (error) {
     console.error('加载词库失败:', error);
     maskedWordElement.textContent = '加载词库失败';
-    definitionElement.textContent = '请稍后重试';
+    definitionElement.textContent = error.message;
     exampleElement.textContent = '-';
     phoneticElement.textContent = '-';
   }
