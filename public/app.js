@@ -95,3 +95,95 @@ $('#saveGoalBtn').addEventListener('click', async () => {
   const achievements = await api.getAchievements();
   renderAchievements(achievements);
 })();
+
+// Sample vocabulary data
+const vocabularyData = [
+  {
+    word: "Ephemeral",
+    phonetic: "/ɪˈfɛm(ə)rəl/",
+    definition: "Lasting for a very short time.",
+    example: "The ephemeral nature of fashion trends makes it hard to keep up.",
+    tags: ["adjective", "formal"]
+  },
+  {
+    word: "Serendipity",
+    phonetic: "/ˌsɛr(ə)nˈdɪpɪti/",
+    definition: "The occurrence and development of events by chance in a happy or beneficial way.",
+    example: "The discovery of penicillin was a serendipity.",
+    tags: ["noun", "positive"]
+  },
+  {
+    word: "Ubiquitous",
+    phonetic: "/juːˈbɪkwɪtəs/",
+    definition: "Present, appearing, or found everywhere.",
+    example: "Mobile phones have become ubiquitous in modern society.",
+    tags: ["adjective", "formal"]
+  }
+];
+
+// DOM Elements
+const vocabularyList = document.getElementById('vocabulary-list');
+const searchInput = document.querySelector('.search-input');
+
+// Render vocabulary cards
+function renderVocabularyCards(data) {
+  vocabularyList.innerHTML = '';
+  
+  if (data.length === 0) {
+    vocabularyList.innerHTML = '<p>No words found. Try a different search term.</p>';
+    return;
+  }
+  
+  data.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card vocabulary-card';
+    
+    const tagsHTML = item.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+    
+    card.innerHTML = `
+      <div class="word">${item.word}</div>
+      <div class="phonetic">${item.phonetic}</div>
+      <div class="definition">${item.definition}</div>
+      <div class="example">${item.example}</div>
+      <div class="tags">${tagsHTML}</div>
+    `;
+    
+    vocabularyList.appendChild(card);
+  });
+}
+
+// Search functionality
+searchInput.addEventListener('input', (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+  const filteredData = vocabularyData.filter(item => 
+    item.word.toLowerCase().includes(searchTerm) || 
+    item.definition.toLowerCase().includes(searchTerm)
+  );
+  renderVocabularyCards(filteredData);
+});
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', () => {
+  renderVocabularyCards(vocabularyData);
+});
+
+// Add new word functionality (to be implemented)
+function addNewWord(wordData) {
+  vocabularyData.push(wordData);
+  renderVocabularyCards(vocabularyData);
+  // Here you would also save to localStorage or a backend
+}
+
+// Example of adding a new word (for testing)
+// Uncomment to test
+/*
+setTimeout(() => {
+  addNewWord({
+    word: "Eloquent",
+    phonetic: "/ˈɛləkwənt/",
+    definition: "Fluent or persuasive in speaking or writing.",
+    example: "She gave an eloquent speech that moved the audience.",
+    tags: ["adjective", "positive"]
+  });
+}, 3000);
+*/

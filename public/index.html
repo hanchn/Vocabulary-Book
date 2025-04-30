@@ -1,84 +1,37 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>词汇背诵工具</title>
+  <title>Vocabulary Book</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-  <header>
-    <h1>📚 词汇背诵工具</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html" class="active">今日学习</a></li>
-        <li><a href="review.html">复习</a></li>
-        <li><a href="wrong.html">错词本</a></li>
-        <li><a href="achievement.html">成就</a></li>
+  <div class="container">
+    <nav class="navbar">
+      <a href="#" class="navbar-brand">Vocabulary Book</a>
+      <ul class="navbar-nav">
+        <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Add Word</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Review</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Statistics</a></li>
       </ul>
     </nav>
-  </header>
 
-  <main>
-    <section class="dashboard">
-      <div class="stats">
-        <div class="stat-card">
-          <h3>今日进度</h3>
-          <div class="progress-bar">
-            <div class="progress" id="todayProgress" style="width: 0%"></div>
-          </div>
-          <p><span id="completedCount">0</span>/<span id="totalCount">0</span></p>
-        </div>
-        <div class="stat-card">
-          <h3>当前词库</h3>
-          <select id="librarySelector">
-            <option value="loading">加载中...</option>
-          </select>
-        </div>
-      </div>
-    </section>
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search for words...">
+    </div>
 
-    <section class="word-container">
-      <div class="word-card" id="wordCard">
-        <div class="word-header">
-          <h2 id="currentWord">加载中...</h2>
-          <p class="phonetic" id="phonetic"></p>
-          <button id="playAudio" class="icon-button">🔊</button>
-        </div>
-        <div class="word-content">
-          <div class="definition">
-            <h3>释义</h3>
-            <p id="definition"></p>
-          </div>
-          <div class="example">
-            <h3>例句</h3>
-            <p id="example"></p>
-          </div>
-          <div class="synonyms">
-            <h3>同义词</h3>
-            <p id="synonyms"></p>
-          </div>
-          <div class="antonyms">
-            <h3>反义词</h3>
-            <p id="antonyms"></p>
-          </div>
-        </div>
-        <div class="word-footer">
-          <button id="prevButton" class="nav-button">上一个</button>
-          <div class="action-buttons">
-            <button id="wrongButton" class="action-button wrong">不认识</button>
-            <button id="knownButton" class="action-button known">认识</button>
-          </div>
-          <button id="nextButton" class="nav-button">下一个</button>
-        </div>
-      </div>
-    </section>
-  </main>
+    <h1>My Vocabulary Collection</h1>
 
-  <footer>
-    <p>本地词汇背诵工具 &copy; 2023</p>
-  </footer>
+    <div class="grid" id="vocabulary-list">
+      <!-- Vocabulary cards will be added here dynamically -->
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2023 Vocabulary Book. All rights reserved.</p>
+  </div>
 
   <script src="app.js"></script>
 </body>
